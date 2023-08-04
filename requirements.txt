@@ -10,3 +10,4 @@ seaborn
 SQLAlchemy
 sweetviz
 ydata_profiling
+streamlit
