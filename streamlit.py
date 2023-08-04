@@ -1,17 +1,14 @@
 import pandas as pd
 import streamlit as st 
 
-from sqlalchemy import create_engine
+#from sqlalchemy import create_engine
 import joblib, pickle
 
 model1 = pickle.load(open('logic.pkl', 'rb'))
 pipe = joblib.load('pipeline.joblib')
 
 
-def predict_Y(data, user, pw, db):
-
-    engine = create_engine(f"mysql+pymysql://{user}:{pw}@localhost/{db}")
-    
+def predict_Y(data):
     
     clean = pd.DataFrame(pipe.transform(data), columns=pipe.named_steps['preprocess'].get_feature_names_out())
     
@@ -20,7 +17,7 @@ def predict_Y(data, user, pw, db):
     
     final = pd.concat([prediction, data], axis = 1)
         
-    final.to_sql('pla', con = engine, if_exists = 'replace', chunksize = 1000, index = False)
+    # final.to_sql('pla', con = engine, if_exists = 'replace', chunksize = 1000, index = False)
 
     return final
 
@@ -61,15 +58,11 @@ def main():
     </div>
     """
     st.sidebar.markdown(html_temp, unsafe_allow_html = True)
-            
-    user = st.sidebar.text_input("user", "Type Here")
-    pw = st.sidebar.text_input("password", "Type Here")
-    db = st.sidebar.text_input("database", "Type Here")
     
     result = ""
     
     if st.button("Predict"):
-        result = predict_Y(data, user, pw, db)
+        result = predict_Y(data)
                            
         import seaborn as sns
         cm = sns.light_palette("yellow", as_cmap = True)
