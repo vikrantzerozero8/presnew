@@ -3,7 +3,7 @@ joblib
 
 pandas
 
-pickle
+
 seaborn
 
 streamlit
